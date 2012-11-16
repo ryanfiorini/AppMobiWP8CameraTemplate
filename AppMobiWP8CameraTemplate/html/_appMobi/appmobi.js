@@ -297,23 +297,23 @@ AppMobi.Contacts.prototype.getContactData = function (id) {
 };
 
 AppMobi.Contacts.prototype.getContacts = function () {
-    AppMobi.stubEvent('contacts.get');
+    AppMobi.exec("AppMobiContacts~GetContacts~");
 }
 
-AppMobi.Contacts.prototype.addContact = function () {
-    AppMobi.stubEvent('contacts.add');
+AppMobi.Contacts.prototype.addContact = function (remoteId, first, last, street, city, state, zip, country, phone, email) {
+    AppMobi.exec("AppMobiContacts~AddContact~", remoteId, first, last, street, city, state, zip, country, phone, email);
 }
 
 AppMobi.Contacts.prototype.chooseContact = function () {
-    AppMobi.stubEvent('contacts.choose');
+    AppMobi.exec("AppMobiContacts~ChooseContact~");
 }
 
 AppMobi.Contacts.prototype.editContact = function (contactID) {
-    AppMobi.stubEvent('contacts.edit', { 'error': 'contacts not available on web', 'contactid': contactID });
+    AppMobi.exec("AppMobiContacts~EditContact~", contactID);
 }
 
 AppMobi.Contacts.prototype.removeContact = function (contactID) {
-    AppMobi.stubEvent('contacts.remove', { 'error': 'contacts not available on web', 'contactid': contactID });
+    AppMobi.exec("AppMobiContacts~RemoveContact~", contactID);
 }
 
 if (typeof AppMobi.contacts == "undefined") AppMobi.contacts = new AppMobi.Contacts();
