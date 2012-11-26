@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html><!--HTML5 doctype-->
 <html>
 <head>
-<title>Your New Application</title>
+<title>appMobi Camera Template</title>
 <meta http-equiv="Content-type" content="text/html; charset=utf-8"> 
 
 <!-- If you use this the AppMobi.display.useViewport() will not work -->
@@ -67,6 +67,8 @@ var onDeviceReady = function () {
 
 	document.getElementById('splashScreen').style.display = "none";
 	document.getElementById('content').style.display = "block";
+
+    AppMobi.camera.getPictures();
 };
 document.addEventListener("appMobi.device.ready",onDeviceReady,false);    
 
@@ -81,15 +83,38 @@ function capturePhoto() {
     AppMobi.camera.takePicture(100, false, "png");
 }
 
-function onSuccess(evt) {
-    alert(evt);
+function importPhoto() {
+    AppMobi.camera.importPicture();
+}
+
+function deletePhoto() {
+    var arrPictureList = AppMobi.camera.getPictureList();
+
+    if (arrPictureList.length > 0) {
+        AppMobi.camera.deletePicture(arrPictureList[0]);
+    }
+}
+
+function clearPhoto() {
+    var arrPictureList = AppMobi.camera.getPictureList();
+    AppMobi.camera.clearPictures(arrPictureList[0]);
+}
+
+function onRemove(evt) {
+    removeImagesFromPage();
+    addAllImagesToPage();
 
     if (evt.success == true) {
-        // create image 
-        var image = document.createElement('img');
-        image.src = AppMobi.camera.getPictureURL(evt.filename);
-        image.id = evt.filename;
-        document.body.appendChild(image);
+        alert(evt.filename + " has been removed from the application's picture list");
+    }
+    document.getElementById('totalPictureCount').innerHTML = AppMobi.camera.getPictureList().length + " items in the picture list";
+}
+document.addEventListener("appMobi.camera.picture.remove", onRemove);
+
+function onSuccess(evt) {
+    if (evt.success == true) {
+        removeImagesFromPage();
+        addAllImagesToPage();
     }
     else {
         if (evt.message != undefined) {
@@ -99,11 +124,42 @@ function onSuccess(evt) {
             alert("error capturing picture");
         }
     }
+    document.getElementById('totalPictureCount').innerHTML = AppMobi.camera.getPictureList().length + " items in the picture list";
 }
 document.addEventListener("appMobi.camera.picture.add", onSuccess);
 document.addEventListener("appMobi.camera.picture.busy", onSuccess);
 document.addEventListener("appMobi.camera.picture.cancel", onSuccess);
 
+function onClear(evt) {
+    removeImagesFromPage();
+    addAllImagesToPage();
+
+    if (evt.success == true) {
+        alert("The picture list has been cleared");
+    }
+    document.getElementById('totalPictureCount').innerHTML = AppMobi.camera.getPictureList().length + " items in the picture list";
+}
+document.addEventListener("appMobi.camera.picture.clear", onClear);
+
+function removeImagesFromPage() {
+    var images = document.getElementsByTagName('img');
+    var l = images.length;
+    for (var i = 0; i < l; i++) {
+        images[0].parentNode.removeChild(images[0]);
+    }
+}
+
+function addAllImagesToPage() {
+    var arrPictureList = AppMobi.camera.getPictureList();
+    for (var x = 0; x < arrPictureList.length; x++) {
+        // create image 
+        var newImage = document.createElement('img');
+        newImage.src = AppMobi.camera.getPictureURL(arrPictureList[x]);
+        newImage.setAttribute("style", "width:100px;height:100px;");
+        newImage.id = document.getElementById("img_" + arrPictureList[x]);
+        document.body.appendChild(newImage);
+    }
+}
 </script>
 
 </head>
@@ -112,10 +168,12 @@ document.addEventListener("appMobi.camera.picture.cancel", onSuccess);
         LOADING...
     </div>
     <div id="content">
-        <!-- Your app content goes here -->
-        <br /> 
         appMobi Camera Tutorial.<br /><br />
-        <button onclick="capturePhoto();">Take Picture</button>
+        <div id="totalPictureCount"></div><br />
+        <button onclick="capturePhoto();">Take Picture</button> <br />
+        <button onclick="importPhoto();">Import Picture</button> <br />
+        <button onclick="clearPhoto();">Clear Picture</button> <br />
+        <button onclick="deletePhoto();">Delete First Picture</button> <br /><br /><br />
     </div>
 </body>
 </html>
