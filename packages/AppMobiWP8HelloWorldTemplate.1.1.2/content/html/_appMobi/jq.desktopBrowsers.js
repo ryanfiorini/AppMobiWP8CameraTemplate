@@ -1,37 +1,9 @@
-﻿window.console = { version: '1.1' };
-window.console.log = function () {
-    var args = [].splice.call(arguments, 0);
-    window.external.notify("AppMobiDebug~Log~~" + args.join(', '));
-};
-window.console.error = function () {
-    var args = [].splice.call(arguments, 0);
-    window.external.notify("AppMobiDebug~Error~~" + args.join(', '));
-};
-window.console.warn = function () {
-    var args = [].splice.call(arguments, 0);
-    window.external.notify("AppMobiDebug~Warn~~" + args.join(', '));
-};
-
-window.onerror = function (msg, url, lineNum) {
-    console.error("--------------------");
-    console.error("Message: " + msg);
-    console.error("Url: " + url);
-    console.error("Line Number: " + lineNum);
-    console.error("--------------------");
-}
-
-// IE does NOT provide an alert method, you can patch it with this line after deviceready.
-if (!window.alert)
-    window.alert = (navigator.notification) ? navigator.notification.alert : function (msg) { console.log(msg); };
-
-console.log('_appMobi/window.js is included to extend the window object.');
-console.error('Test error in _appMobi/window.js.', this);
-console.warn('Test warn in _appMobi/window.js.', this);
-
 //desktopBrowsers contributed by Carlos Ouro @ Badoo
 //translates desktop browsers events to touch events and prevents defaults
 //It can be used independently in other apps but it is required for using the touchLayer in the desktop
-; (function () {
+
+
+; (function ($) {
 
     var cancelClickMove = false;
     var preventAll = function (e) {
@@ -74,38 +46,66 @@ console.warn('Test warn in _appMobi/window.js.', this);
 		lastTarget = null, firstMove = false;
 
 
-    document.addEventListener("MSPointerDown", function (e) {
+    if (!window.navigator.msPointerEnabled) {
 
-        mouseDown = true;
-        lastTarget = e.target;
-        if (e.target.nodeName.toLowerCase() == "a" && e.target.href.toLowerCase() == "javascript:;")
-            e.target.href = "#";
+        document.addEventListener("mousedown", function (e) {
+            mouseDown = true;
+            lastTarget = e.target;
+            redirectMouseToTouch("touchstart", e);
+            firstMove = true;
+            cancelClickMove = false;
+        }, true);
 
-        redirectMouseToTouch("touchstart", e);
-        firstMove = true;
-        cancelClickMove = false;
-        //  e.preventDefault();e.stopPropagation();
-    }, true);
+        document.addEventListener("mouseup", function (e) {
+            if (!mouseDown) return;
+            redirectMouseToTouch("touchend", e, lastTarget);	//bind it to initial mousedown target
+            lastTarget = null;
+            mouseDown = false;
+        }, true);
 
-    document.addEventListener("MSPointerUp", function (e) {
-        if (!mouseDown) return;
-        redirectMouseToTouch("touchend", e, lastTarget);	//bind it to initial mousedown target
-        lastTarget = null;
-        mouseDown = false;
-        //	e.preventDefault();e.stopPropagation();
-    }, true);
+        document.addEventListener("mousemove", function (e) {
+            if (!mouseDown) return;
+            if (firstMove) return firstMove = false
+            redirectMouseToTouch("touchmove", e);
+            e.preventDefault();
 
-    document.addEventListener("MSPointerMove", function (e) {
+            cancelClickMove = true;
+        }, true);
+    }
+    else { //Win8
+        document.addEventListener("MSPointerDown", function (e) {
 
-        if (!mouseDown) return;
-        if (firstMove) return firstMove = false
-        redirectMouseToTouch("touchmove", e);
-        e.preventDefault();
-        //e.stopPropagation();
+            mouseDown = true;
+            lastTarget = e.target;
+            if (e.target.nodeName.toLowerCase() == "a" && e.target.href.toLowerCase() == "javascript:;")
+                e.target.href = "#";
 
-        cancelClickMove = true;
+            redirectMouseToTouch("touchstart", e);
+            firstMove = true;
+            cancelClickMove = false;
+            //  e.preventDefault();e.stopPropagation();
+        }, true);
 
-    }, true);
+        document.addEventListener("MSPointerUp", function (e) {
+            if (!mouseDown) return;
+            redirectMouseToTouch("touchend", e, lastTarget);	//bind it to initial mousedown target
+            lastTarget = null;
+            mouseDown = false;
+            //	e.preventDefault();e.stopPropagation();
+        }, true);
+
+        document.addEventListener("MSPointerMove", function (e) {
+
+            if (!mouseDown) return;
+            if (firstMove) return firstMove = false
+            redirectMouseToTouch("touchmove", e);
+            e.preventDefault();
+            //e.stopPropagation();
+
+            cancelClickMove = true;
+
+        }, true);
+    }
 
 
     //prevent all mouse events which dont exist on touch devices
@@ -134,4 +134,4 @@ console.warn('Test warn in _appMobi/window.js.', this);
         document.dispatchEvent(touchevt);
     }, false);
 
-})();
+})(jq);

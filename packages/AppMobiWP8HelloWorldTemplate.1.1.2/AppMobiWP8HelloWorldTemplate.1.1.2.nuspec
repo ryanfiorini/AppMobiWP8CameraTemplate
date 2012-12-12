@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>AppMobiWP8HelloWorldTemplate</id>
+    <version>1.1.2</version>
+    <title>appMobi Windows Phone 8 Hello World Sample Template for HTML5 Development</title>
+    <authors>appMobi</authors>
+    <owners>appMobi</owners>
+    <iconUrl>http://apphub.appmobi.com/images/appmobi rectangular icon 128x128.jpg</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>appMobi's Windows Phone 8 "Hello World" demo as a starting point for your html 5 development.</description>
+    <summary>appMobi's Windows Phone 8 "Hello World" demo as a starting point for your html 5 development.</summary>
+    <releaseNotes>This template will pull down an AppMobiPage.xaml and the necessary HTML content and placed in a HTML folder.  
+
+* You will need to update the WMAppManifest.xml in the Properties folder.  Change the Navigation Page to AppMobiPage.xaml.</releaseNotes>
+    <copyright>Copyright 2012</copyright>
+    <tags>appMobi Windows Phone 8 WP8 WebBrowser HTML5</tags>
+    <dependencies>
+      <dependency id="AppMobiWebViewWP8" version="1.1.2" />
+    </dependencies>
+  </metadata>
+</package>
