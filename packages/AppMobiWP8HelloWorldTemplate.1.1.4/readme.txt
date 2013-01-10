@@ -1,13 +1,10 @@
-﻿--------------------------------
-AppMobiWP8CameraTemplate Readme:
---------------------------------
+﻿------------------------------------
+AppMobiWP8HelloWorldTemplate Readme:
+------------------------------------
 
 This template will pull down an AppMobiPage.xaml and the necessary HTML content and placed in a HTML folder.  
 
-* You will need to update the WMAppManifest.xml in the Properties folder.  Change the Navigation Page to AppMobiPage.xaml then 
-  go into the Capabilities tab and add ID_CAP_ISV_CAMERA.
-The default appMobi splash screen is located in the Assets directory.  You will need to replace ours with your own custom one for 
-landscape and portrait.
+* You will need to update the WMAppManifest.xml in the Properties folder.  Change the Navigation Page to AppMobiPage.xaml.
 
 AppMobiWebSource.xml:
    This file is used to list all the files to be loaded into isolated storage for navigating in the WebBrowser.
@@ -26,10 +23,9 @@ jqMobi github	- https://github.com/appMobi/jQ.Mobi
 Other appMobi WP8 Templates:
     Install-Package AppMobiWP8HelloWorldTemplate
 	Install-Package AppMobiWP8SampleGameTemplate
+	Install-Package AppMobiWP8AccelerometerTemplate
 	Install-Package AppMobiWP8SimpleJqMobiTemplate
 	Install-Package AppMobiWP8JqMobiKitchenSinkTemplate
-	Install-Package AppMobiWP8AccelerometerTemplate
-	Install-Package AppMobiWP8CameraTemplate
 
 
 Developr Notes:
